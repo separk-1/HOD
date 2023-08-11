@@ -81,7 +81,7 @@ for cam_id in cam_list:
         video.release()
         print('이미지 추출 완료')
         
-        finished_video_list.append(video_id)
+        finished_video_list.append(f'IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}')
 
 print(f'이번에 처리한 비디오: {finished_video_list}')
 
