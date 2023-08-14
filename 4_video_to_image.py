@@ -41,7 +41,7 @@ for cam_id in cam_list:
         video_date = video_id[2:8]
 
         # 동영상 파일 경로
-        video_path = f'C:/Users/User/Downloads/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
+        video_path = f'C:/Users/SEPARK/Downloads/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
 
         # 파일이 존재하지 않으면 다음 비디오로 넘어감
         if not os.path.exists(video_path):
@@ -83,7 +83,9 @@ for cam_id in cam_list:
         
         finished_video_list.append(f'IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}')
 
-print(f'이번에 처리한 비디오: {finished_video_list}')
+print(f'이번에 처리한 비디오: {len(finished_video_list)}개')
+for i in finished_video_list:
+    print(i)
 
 timenow = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -92,4 +94,4 @@ with open(finish_list_path, 'a', encoding='utf-8') as f:
     f.write('\n' + timenow + '\n')
     for video_id in finished_video_list:
         f.write(video_id + '\n')
-    print(f'완료된 비디오 목록이 {finish_list_path}에 저장되었습니다.')
+    print(f'\n완료된 비디오 목록이 {finish_list_path}에 저장되었습니다.')
