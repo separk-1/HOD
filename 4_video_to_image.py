@@ -41,7 +41,7 @@ for cam_id in cam_list:
         video_date = video_id[2:8]
 
         # 동영상 파일 경로
-        video_path = f'C:/Users/SEPARK/Downloads/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
+        video_path = f'C:/Users/User/Downloads/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
 
         # 파일이 존재하지 않으면 다음 비디오로 넘어감
         if not os.path.exists(video_path):
