@@ -1,6 +1,7 @@
 import cv2
 import os
 import datetime
+import argparse
 
 ##########SETTING###########
 cam_list = [1, 2, 3, 4, 8]
@@ -16,12 +17,54 @@ def read_list_from_file(file_path):
     video_list = [line.strip() for line in lines]
     return video_list
 
+def correct_time_format(time_str):
+    hour = int(time_str[:2])
+    minute = int(time_str[2:])
+
+    # 60분을 넘어가면 시간을 1 증가시키고 분에서 60을 빼준다
+    hour += minute // 60
+    minute = minute % 60
+
+    return f"{hour:02}{minute:02}"
+
+def generate_filename(cam_id, video_id, timestamp):
+    start_time = video_id.split('_')[0]
+    yy = start_time[2:4]
+    mm = start_time[4:6]
+    dd = start_time[6:8]
+    hh = start_time[8:10]
+    minmin = start_time[10:12]
+    ss = int(start_time[12:14])
+    
+    elapsed_seconds = timestamp * 30  # 30초 단위로 변환
+    new_ss = ss + elapsed_seconds
+    
+    new_hour_offset = new_ss // 3600
+    new_minute_offset = (new_ss % 3600) // 60
+    new_second_offset = new_ss % 60
+
+    hh = str(int(hh) + new_hour_offset).zfill(2)
+    minmin = str(int(minmin) + new_minute_offset).zfill(2)
+    ss = str(new_second_offset).zfill(2)
+    
+    last_digit = timestamp % 2  # 0 또는 1
+    
+    corrected_time = correct_time_format(hh + minmin)
+    return f'D{cam_id}_{yy}{mm}{dd}_{corrected_time}_{last_digit}.png'
+
+
+parser = argparse.ArgumentParser(description='computer (home/lab)')
+parser.add_argument('-c', '--com', type=str, required=False, default = 'lab', help='실행할 모드를 설정합니다.')
+args = parser.parse_args()
+
 # finishlist와 skiplist 읽기
 finish_list = read_list_from_file(finish_list_path)
 skip_list = read_list_from_file(skip_list_path)
 
 finished_video_list = []
 for cam_id in cam_list:
+    count_finish = 0
+    count_skip = 0
 
     file_path = f'./video_list/videolist_D{cam_id}_filtered.txt'
 
@@ -30,18 +73,25 @@ for cam_id in cam_list:
     for video_name in video_list:
 
         if video_name in finish_list:
-            print(f'{video_name} 은(는) finishlist에 있으므로 스킵합니다.')
+            count_finish+=1
+            #print(f'{video_name} 은(는) finishlist에 있으므로 스킵합니다.')
             continue
 
         if video_name in skip_list:
-            print(f'{video_name} 은(는) skiplist에 있으므로 스킵합니다.')
+            count_skip += 1
+            #print(f'{video_name} 은(는) skiplist에 있으므로 스킵합니다.')
             continue
 
         video_id = video_name.split('롯데 서초테라스힐_서초 테라스힐_')[1]
         video_date = video_id[2:8]
 
         # 동영상 파일 경로
-        video_path = f'C:/Users/User/Downloads/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
+        if args.com == 'lab' or args.com == 'l':
+            video_path = f'C:/Users/SEPARK/Downloads/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
+        elif args.com == 'home' or args.com == 'h':
+            video_path = f'C:/Users/User/Downloads/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
+        else:
+            print("wrong com")
 
         # 파일이 존재하지 않으면 다음 비디오로 넘어감
         if not os.path.exists(video_path):
@@ -71,7 +121,7 @@ for cam_id in cam_list:
 
             # n초 간격으로 이미지 저장
             if frame_count % frame_interval == 0:
-                output_path = os.path.join(date_folder, f'{video_id}_{timestamp:04}.png')
+                output_path = os.path.join(date_folder, generate_filename(cam_id, video_id, timestamp))
                 cv2.imwrite(output_path, frame)
                 print(f'{output_path} 저장 완료')
                 timestamp += 1
@@ -82,6 +132,8 @@ for cam_id in cam_list:
         print('이미지 추출 완료')
         
         finished_video_list.append(f'IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}')
+
+    print(f'D{cam_id}: finish {count_finish}, total {len(video_list)}, skip {count_skip}')
 
 print(f'이번에 처리한 비디오: {len(finished_video_list)}개')
 for i in finished_video_list:
