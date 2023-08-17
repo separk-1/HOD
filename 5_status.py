@@ -73,9 +73,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.com in ['lab', 'l']:
-        directory_path = "G:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/1_원본"
+        directory_path = "G:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output"
     elif args.com in ['home', 'h']:
-        directory_path = "H:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/1_원본"
+        directory_path = "H:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output"
     else:
         print("wrong mode")
 

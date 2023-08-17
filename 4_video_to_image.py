@@ -99,7 +99,7 @@ for cam_id in cam_list:
             continue
 
         # 이미지를 저장할 폴더 생성
-        date_folder = f'./1_원본/D{cam_id}/{video_date}/'
+        date_folder = f'./output/D{cam_id}/{video_date}/'
         print(date_folder)
         if not os.path.exists(date_folder):
             os.makedirs(date_folder)        
