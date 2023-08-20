@@ -28,17 +28,21 @@ def count_files_in_directory(path):
     folder_dict = {}
 
     for foldername, subfolders, filenames in os.walk(path):
-        parts = foldername.split(os.path.sep)
-        
-        if len(parts) >= 3:
-            main_folder = parts[-2]
-            date_folder = parts[-1]
+            parts = foldername.split(os.path.sep)
+            
+            if len(parts) >= 3:
+                main_folder = parts[-2]
+                date_folder = parts[-1]
 
-            if main_folder.startswith("D") and date_folder.isdigit():
-                if main_folder not in folder_dict:
-                    folder_dict[main_folder] = []
-                formatted_date, date_obj = extract_date(date_folder)
-                folder_dict[main_folder].append((formatted_date, date_obj, len(filenames)))
+                # date_folder의 형식이 D1_210203인 경우, 숫자 부분만 추출
+                if '_' in date_folder:
+                    date_folder = date_folder.split('_')[1]
+                
+                if main_folder.startswith("D") and date_folder.isdigit():
+                    if main_folder not in folder_dict:
+                        folder_dict[main_folder] = []
+                    formatted_date, date_obj = extract_date(date_folder)
+                    folder_dict[main_folder].append((formatted_date, date_obj, len(filenames)))
 
     # 폴더별 정보 출력
     for main_folder in sorted(folder_dict.keys()):
@@ -76,6 +80,8 @@ if __name__ == "__main__":
         directory_path = "G:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output"
     elif args.com in ['home', 'h']:
         directory_path = "H:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output"
+    elif args.com in ['drive', 'd']:
+        directory_path = "D:/images"
     else:
         print("wrong mode")
 
