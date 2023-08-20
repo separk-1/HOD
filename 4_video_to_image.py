@@ -133,8 +133,9 @@ for cam_id in cam_list:
         
         finished_video_list.append(f'IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}')
 
-    print(f'D{cam_id}: finish {count_finish}, total {len(video_list)}, skip {count_skip}')
+    print(f'D{cam_id}: Completed {count_finish}, Remaining: {len(video_list)-count_finish}, Progress: {count_finish/len(video_list)*100:.2f}%')
 
+print('기준: 221201~230302 (79일)')
 print(f'이번에 처리한 비디오: {len(finished_video_list)}개')
 for i in finished_video_list:
     print(i)
