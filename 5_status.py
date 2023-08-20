@@ -22,6 +22,8 @@ def count_files_in_directory(path, output_file=None):
 
      # Directory path 정보를 txt 파일 맨 앞에 추가
     if output_file:
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        output_file.write(f"Timestamp: {current_time}\n")
         output_file.write(f"Directory Path: {path}\n\n")
 
     folder_dict = {}
