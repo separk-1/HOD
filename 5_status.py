@@ -89,7 +89,7 @@ if __name__ == "__main__":
         exit()
 
     if args.log:
-        with open('results.txt', 'w', encoding='utf-8') as f:
+        with open('status.txt', 'w', encoding='utf-8') as f:
             count_files_in_directory(directory_path, f)
     else:
         count_files_in_directory(directory_path)
