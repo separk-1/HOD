@@ -161,7 +161,7 @@ for cam_id in cam_list:
             with open(finish_list_path, 'a', encoding='utf-8') as f:
                 f.write(completed_video + '\n')
             
-            print(f'\n완료된 비디오 목록이 {finish_list_path}에 저장되었습니다.')
+            print(f'완료된 비디오 목록이 {finish_list_path}에 저장되었습니다.\n')
 
         # 로컬에 저장된 비디오 파일 제거
         if os.path.exists(local_video_path):
