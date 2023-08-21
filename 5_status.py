@@ -72,7 +72,7 @@ def count_files_in_directory(path, output_file=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Specify computer type')
-    parser.add_argument('-c', '--com', choices=['lab', 'l', 'home', 'h', 'drive', 'd'], default='lab', help='실행할 모드를 설정합니다.')
+    parser.add_argument('-c', '--com', choices=['lab', 'l', 'home', 'h', 'drive', 'd', 'backup', 'b'], default='lab', help='실행할 모드를 설정합니다.')
     parser.add_argument('-l', '--log', action='store_true', help='log 저장 여부를 설정합니다.')
     args = parser.parse_args()
 
@@ -81,8 +81,10 @@ if __name__ == "__main__":
         'l': "G:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output",
         'home': "H:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output",
         'h': "H:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output",
-        'drive': "D:/images",
-        'd': "D:/images"
+        'drive': "E:/images",
+        'd': "E:/images",
+        'backup': "D:/LOTTE/images",
+        'b': "D:/LOTTE/images"
     }
     
     directory_path = paths.get(args.com, None)

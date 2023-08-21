@@ -3,12 +3,14 @@ import os
 import datetime
 import argparse
 import time
+import shutil
 
 ##########SETTING###########
-cam_list = [1]
+cam_list = [1, 2, 3, 4, 8]
 interval = 30 #단위: sec
 finish_list_path = './video_list/finishlist.txt'
 skip_list_path = './video_list/skiplist.txt'
+save_path = "C:/Users/SEPARK/Downloads" 
 ############################
 
 def read_list_from_file(file_path):
@@ -53,6 +55,9 @@ def generate_filename(cam_id, video_id, timestamp):
     corrected_time = correct_time_format(hh + minmin)
     return f'D{cam_id}_{yy}{mm}{dd}_{corrected_time}_{last_digit}.png'
 
+# 비디오 파일을 로컬로 복사합니다.
+def copy_video_to_local(src, dst):
+    shutil.copy(src, dst)
 
 parser = argparse.ArgumentParser(description='computer (home/lab)')
 parser.add_argument('-c', '--com', type=str, required=False, default = 'lab', help='실행할 모드를 설정합니다.')
@@ -71,7 +76,7 @@ for cam_id in cam_list:
     count_finish = 0
     count_skip = 0
 
-    file_path = f'./video_list/videolist_test.txt'
+    file_path = f'./video_list/videolist_D{cam_id}_download.txt'
 
     video_list = read_list_from_file(file_path)
 
@@ -90,28 +95,32 @@ for cam_id in cam_list:
         video_id = video_name.split('롯데 서초테라스힐_서초 테라스힐_')[1]
         video_date = video_id[2:8]
 
-        formatted_date = f"{video_date[0:2]}.{video_date[2:4]}.{video_date[4:6]}"
+        formatted_date = video_id[0:8]
+        #2월부터
+        #formatted_date = f"{video_date[0:2]}.{video_date[2:4]}.{video_date[4:6]}"
 
-        #video_path = f'Z:/CCTV/CCTV_Video/롯데건설 서초테라스힐 현장 CCTV_2/{formatted_date}/[D{cam_id}]IPdome/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
-        
-        # UNC 경로
-        video_path = f'//teamcovid.synology.me@SSL@6001/DavWWWRoot/CCTV/CCTV_Video/롯데건설 서초테라스힐 현장 CCTV_2/{formatted_date}/[D{cam_id}]IPdome/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
+        video_path = f'//teamcovid.synology.me@SSL@6001/DavWWWRoot/CCTV/CCTV_Video/LOTTE_CCTV_1/23년도01월/{formatted_date}/[D{cam_id}]IPdome/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
+        #2월부터
+        #video_path = f'//teamcovid.synology.me@SSL@6001/DavWWWRoot/CCTV/CCTV_Video/LOTTE_CCTV_2/{formatted_date}/[D{cam_id}]IPdome/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
+    
+        local_video_path = os.path.join(save_path, os.path.basename(video_path))
 
-        time.sleep(1)  # 1초 딜레이
-
-        # 파일이 존재하지 않으면 다음 비디오로 넘어감
-        if not os.path.exists(video_path):
+        # 파일이 네트워크 드라이브에 존재하면 로컬로 복사
+        if os.path.exists(video_path):
+            print(f'{video_path} 파일을 {local_video_path}로 복사합니다.')
+            copy_video_to_local(video_path, local_video_path)
+        else:
             print(f'{video_path} 파일이 존재하지 않습니다. 건너뜁니다.')
             continue
 
         # 이미지를 저장할 폴더 생성
-        date_folder = f'D:/롯데건설 서초테라스힐/images/D{cam_id}/D{cam_id}_{video_date}/'
+        date_folder = f'D:/LOTTE/images/D{cam_id}/D{cam_id}_{video_date}/'
         print(video_path)
         if not os.path.exists(date_folder):
             os.makedirs(date_folder)        
         
         # 동영상 파일 읽기
-        video = cv2.VideoCapture(video_path)
+        video = cv2.VideoCapture(video_path, cv2.CAP_FFMPEG)
         fps = 30 #int(video.get(cv2.CAP_PROP_FPS))
 
         # n초에 한 번 이미지를 추출하기 위한 간격 설정
@@ -123,17 +132,14 @@ for cam_id in cam_list:
         while True:
             ret, frame = video.read()
             
-            print(frame.shape)
             if not ret:
                 break
 
             # n초 간격으로 이미지 저장
             if frame_count % frame_interval == 0:
                 output_path = os.path.join(date_folder, generate_filename(cam_id, video_id, timestamp))
-                if not os.path.exists(output_path):
+                if not os.path.exists(output_path):  # 이미지가 존재하지 않을 경우만 저장
                     # 화면에 표시
-                    cv2.imshow('Extracted Frame', frame)
-                    cv2.waitKey(1)
                     success = cv2.imwrite(output_path, frame)
                     if success:
                         print(f'{output_path} 저장 완료')
@@ -146,21 +152,25 @@ for cam_id in cam_list:
             frame_count += 1
 
         video.release()
-        print('이미지 추출 완료')
         
-        completed_video = f'IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}'
-        finished_video_list.append(completed_video)
+        if frame_count > 0:
+            completed_video = f'IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}'
+            finished_video_list.append(completed_video)
 
-        # 처리한 비디오를 finishlist.txt에 추가
-        with open(finish_list_path, 'a', encoding='utf-8') as f:
-            f.write(completed_video + '\n')
+            # 처리한 비디오를 finishlist.txt에 추가
+            with open(finish_list_path, 'a', encoding='utf-8') as f:
+                f.write(completed_video + '\n')
+            
+            print(f'\n완료된 비디오 목록이 {finish_list_path}에 저장되었습니다.')
 
-    print(f'D{cam_id}: Completed {count_finish}, Remaining: {len(video_list)-count_finish}, Progress: {count_finish/len(video_list)*100:.2f}%')
+        # 로컬에 저장된 비디오 파일 제거
+        if os.path.exists(local_video_path):
+            os.remove(local_video_path)
+
+    #print(f'D{cam_id}: Completed {count_finish}, Remaining: {len(video_list)-count_finish}, Progress: {count_finish/len(video_list)*100:.2f}%')
 
 print('기준: 221201~230302 (79일)')
 print(f'이번에 처리한 비디오: {len(finished_video_list)}개')
 for i in finished_video_list:
     print(i)
 
-
-print(f'\n완료된 비디오 목록이 {finish_list_path}에 저장되었습니다.')

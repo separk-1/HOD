@@ -122,9 +122,12 @@ for cam_id in cam_list:
             # n초 간격으로 이미지 저장
             if frame_count % frame_interval == 0:
                 output_path = os.path.join(date_folder, generate_filename(cam_id, video_id, timestamp))
-                if not os.path.exists(output_path):
-                    cv2.imwrite(output_path, frame)
-                    print(f'{output_path} 저장 완료')
+                if not os.path.exists(output_path):  # 이미지가 존재하지 않을 경우만 저장
+                    success = cv2.imwrite(output_path, frame)
+                    if success:
+                        print(f'{output_path} 저장 완료')
+                    else:
+                        print(f'{output_path} 저장 실패')
                 else:
                     print(f'{output_path} 이미 존재하여 저장하지 않았습니다.')
                 timestamp += 1
