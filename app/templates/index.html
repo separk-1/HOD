@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data from TXT</title>
+    <style>
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.5rem;
+        }
+        .calendar-day {
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center;
+        height: 40px;  /* 적절한 높이로 설정 */
+        width: 300px;
+        }
+        .calendar-day .date {
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .calendar-day .value {
+            font-size: 0.8rem;
+            font-weight: normal;
+        }
+        .data-green {
+            background-color: #BCE9B7; /* 연한 녹색 */
+        }
+        .data-blue {
+            background-color: #D9E5FF; /* 연한 파란색 */
+        }
+        .data-red {
+            background-color: #FFCBCB; /* 연한 빨간색 */
+        }
+    </style>
+    
+</head>
+<!-- [이전 HTML 헤더 및 스타일은 생략합니다.] -->
+
+<body>
+    <h1>Status</h1>
+    <p><strong>Timestamp:</strong> {{ timestamp }}</p>
+    <p><strong>Directory Path:</strong> {{ directory_path }}</p>
+
+    <form action="/" method="post">
+        <label><strong></strong>Select Month:</strong></label>
+        <button type="submit" name="selected_month" value="all">All</button>
+        {% for i in [12,1,2,3,4,5,6,7] %}
+            <button type="submit" name="selected_month" value="{{ i }}">{{ i }}</button>
+        {% endfor %}
+    </form>
+
+    {% for category, items in data.items() %}
+        <h2>{{ category }}</h2>
+        <div class="calendar">
+            {% for date, value in items %}
+                {% set color_class = '' %}
+                {% if value %}
+                    {% set value_int = value|int %}
+                    {% if value_int >= 800 %}
+                        {% set color_class = 'data-green' %}
+                    {% elif value_int >= 500 %}
+                        {% set color_class = 'data-blue' %}
+                    {% else %}
+                        {% set color_class = 'data-red' %}
+                    {% endif %}
+                {% endif %}
+                <div class="calendar-day {{ color_class }}">
+                    <span class="date">{{ date.split('-')[1]|int }}/{{ date.split('-')[2]|int }} {{ get_day_of_week(date) }}</span>
+                    {% if value %}
+                        <span class="value">{{ value }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <script>
+        function updateMonthLabel(value) {
+            document.getElementById('monthLabel').textContent = value;
+        }
+    </script>
+</body>
+</html>
