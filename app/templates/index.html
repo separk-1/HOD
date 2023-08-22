@@ -4,9 +4,40 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" sizes="16x16">
+    <title>Log ▪▪▪ </title>
 
     <style>
+        body {
+            font-family: Arial, sans-serif; /* 기본 폰트 설정 */
+            background-color: #f8f8f8; /* 밝은 회색 배경 */
+            color: #333; /* 글자색 */
+            margin: 40px; /* 바디 주위의 마진 */
+        }
+
+        h1, h2 {
+            color: #4CAF50; /* 녹색 */
+        }
+
+        /* 폼 및 버튼 스타일 */
+        form {
+            margin-bottom: 20px;
+        }
+
+        button[type="submit"], .update-button {
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: none;
+            margin-right: 10px;
+            transition: background-color 0.3s, color 0.3s;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover, .update-button:hover {
+            background-color: #333;
+            color: #f8f8f8;
+        }
         .calendar {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
@@ -18,7 +49,8 @@
         align-items: center; 
         justify-content: center;
         height: 40px;  /* 적절한 높이로 설정 */
-        width: 300px;
+        width: 200px;
+        border-radius: 10px;
         }
         .calendar-day .date {
             font-size: 0.8rem;
@@ -37,15 +69,45 @@
         .data-red {
             background-color: #FFCBCB; /* 연한 빨간색 */
         }
+
+        .data-labeled {
+        background-color: #4CAF50; 
+        color: white; 
+        }
+
+        .update-button {
+        background-color: #4CAF50; /* 녹색 배경 */
+        border: none;
+        color: white; /* 텍스트는 하얀색 */
+        padding: 12px 20px; /* 상하, 좌우 패딩 */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        border-radius: 12px; /* 모서리 둥글게 */
+        transition-duration: 0.4s; /* 호버 효과 시간 */
+        cursor: pointer; /* 마우스 포인터 모양 변경 */
+        border: 2px solid #4CAF50; /* 테두리 */
+    }
+
+    .update-button:hover {
+        background-color: white; /* 호버 상태에서의 배경색 */
+        color: #4CAF50; /* 호버 상태에서의 글자색 */
+    }
+
     </style>
     
 </head>
-<!-- [이전 HTML 헤더 및 스타일은 생략합니다.] -->
-
 <body>
     <h1> 😶😶😶 </h1>
     <p><strong>Timestamp:</strong> {{ timestamp }}</p>
     <p><strong>Directory Path:</strong> {{ directory_path }}</p>
+
+    <form action="/update" method="post">
+        <button class="update-button" type="submit"><strong>Update ✅</strong></button>
+    </form>
+
 
     <form action="/" method="post">
         <label><strong></strong>Select Month:</strong></label>
@@ -58,13 +120,14 @@
     {% for category, items in data.items() %}
         <h2>{{ category }}</h2>
         <div class="calendar">
-            {% for date, value in items %}
+            {% for date, value, labeled in items %}
                 {% set color_class = '' %}
                 {% if value %}
-                    {% set value_int = value|int %}
-                    {% if value_int >= 800 %}
+                    {% if labeled == True %}
+                        {% set color_class = 'data-labeled' %}
+                    {% elif value >= 800 %}
                         {% set color_class = 'data-green' %}
-                    {% elif value_int >= 500 %}
+                    {% elif value >= 500 %}
                         {% set color_class = 'data-blue' %}
                     {% else %}
                         {% set color_class = 'data-red' %}

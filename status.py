@@ -49,7 +49,7 @@ def count_files_in_directory(path, output_file=None):
         if output_file:
             output_file.write(message + '\n')
 
-        for date_str, _, count in dates:
+        for date_str, date, count in dates:
             # 데이터 개수에 따른 색상 설정
             if count > 800:
                 color = Fore.GREEN
@@ -58,12 +58,20 @@ def count_files_in_directory(path, output_file=None):
             elif 0 <= count <= 500:
                 color = Fore.RED
             else:
-                color = Fore.RESET
-        
-            message = f"{color}- {date_str}: {count}{Fore.RESET}"
+                color = Fore.RESET    
+
+            completion_str = ''
+            # D{cam_id}_date 폴더 존재 여부 확인
+            parent_dir = f"D:/LOTTE/labels/{main_folder}/"
+            target_prefix = f"{main_folder}_{date.strftime('%y%m%d')}"
+
+            if any(item.startswith(target_prefix) for item in os.listdir(parent_dir)):
+                completion_str = " (labeled)"
+
+            message = f"{color}- {date_str}: {count}{completion_str}{Fore.RESET}"
             print(message)
             if output_file:
-                output_file.write(f"- {date_str}: {count}\n")
+                output_file.write(f"- {date_str}: {count}{completion_str}\n")
         
         
         print()
@@ -72,8 +80,8 @@ def count_files_in_directory(path, output_file=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Specify computer type')
-    parser.add_argument('-c', '--com', choices=['lab', 'l', 'home', 'h', 'drive', 'd', 'backup', 'b'], default='lab', help='실행할 모드를 설정합니다.')
-    parser.add_argument('-l', '--log', action='store_true', help='log 저장 여부를 설정합니다.')
+    parser.add_argument('-c', '--com', choices=['lab', 'l', 'home', 'h', 'drive', 'd', 'backup', 'b'], default='backup', help='실행할 모드를 설정합니다.')
+    parser.add_argument('-l', '--log', action='store_true', default = True, help='log 저장 여부를 설정합니다.')
     args = parser.parse_args()
 
     paths = {
@@ -92,8 +100,8 @@ if __name__ == "__main__":
         print("wrong mode")
         exit()
 
-    if args.log:
-        with open('status.txt', 'w', encoding='utf-8') as f:
+    if args.log == True:
+        with open('G:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/app/status.txt', 'w', encoding='utf-8') as f:
             count_files_in_directory(directory_path, f)
     else:
         count_files_in_directory(directory_path)
