@@ -10,7 +10,7 @@ cam_list = [8]
 interval = 30 #단위: sec
 finish_list_path = './video_list/finishlist.txt'
 skip_list_path = './video_list/skiplist.txt'
-save_path = "C:/Users/SEPARK/Downloads" 
+save_path = "C:/Users/User/Downloads" 
 ############################
 
 def read_list_from_file(file_path):
@@ -76,7 +76,7 @@ for cam_id in cam_list:
     count_finish = 0
     count_skip = 0
 
-    file_path = f'./video_list/videolist_D{cam_id}_12.txt'
+    file_path = f'./video_list/videolist_D{cam_id}_0215_0228.txt'
 
     video_list = read_list_from_file(file_path)
 
@@ -95,13 +95,9 @@ for cam_id in cam_list:
         video_id = video_name.split('롯데 서초테라스힐_서초 테라스힐_')[1]
         video_date = video_id[2:8]
 
-        formatted_date = video_id[0:8]
-        #2월부터
-        #formatted_date = f"{video_date[0:2]}.{video_date[2:4]}.{video_date[4:6]}"
+        formatted_date = f"{video_date[0:2]}.{video_date[2:4]}.{video_date[4:6]}"
 
-        video_path = f'//teamcovid.synology.me@SSL@6001/DavWWWRoot/CCTV/CCTV_Video/LOTTE_CCTV_1/22년도12월/{formatted_date}/[D{cam_id}]IPdome/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
-        #2월부터
-        #video_path = f'//teamcovid.synology.me@SSL@6001/DavWWWRoot/CCTV/CCTV_Video/LOTTE_CCTV_2/{formatted_date}/[D{cam_id}]IPdome/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
+        video_path = f'//teamcovid.synology.me@SSL@6001/DavWWWRoot/CCTV/CCTV_Video/LOTTE_CCTV_2/{formatted_date}/[D{cam_id}]IPdome/IP 카메라{cam_id}_롯데 서초테라스힐_서초 테라스힐_{video_id}.mp4'
     
         local_video_path = os.path.join(save_path, os.path.basename(video_path))
 

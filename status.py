@@ -35,7 +35,7 @@ def count_files_in_directory(path, output_file=None):
         main_folder = parts[-2]
         date_folder = parts[-1].split('_')[-1]
 
-        if main_folder.startswith("D") and date_folder.isdigit():
+        if date_folder.isdigit():
             formatted_date, date_obj = extract_date(date_folder)
             folder_dict.setdefault(main_folder, []).append((formatted_date, date_obj, len(filenames)))
 

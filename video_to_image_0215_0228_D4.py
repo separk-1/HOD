@@ -6,11 +6,11 @@ import time
 import shutil
 
 ##########SETTING###########
-cam_list = [1, 2, 3, 4, 8]
+cam_list = [4]
 interval = 30 #단위: sec
 finish_list_path = './video_list/finishlist.txt'
 skip_list_path = './video_list/skiplist.txt'
-save_path = "C:/Users/SEPARK/Downloads" 
+save_path = "C:/Users/User/Downloads" 
 ############################
 
 def read_list_from_file(file_path):
@@ -76,7 +76,7 @@ for cam_id in cam_list:
     count_finish = 0
     count_skip = 0
 
-    file_path = f'./video_list/videolist_D{cam_id}_0126_0131.txt'
+    file_path = f'./video_list/videolist_D{cam_id}_0215_0228.txt'
 
     video_list = read_list_from_file(file_path)
 
