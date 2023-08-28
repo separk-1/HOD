@@ -62,11 +62,18 @@ def count_files_in_directory(path, output_file=None):
 
             completion_str = ''
             # D{cam_id}_date 폴더 존재 여부 확인
-            parent_dir = f"D:/LOTTE/labels/{main_folder}/"
+            parent_dir = f"{directory_path}labels/{main_folder}/"
             target_prefix = f"{main_folder}_{date.strftime('%y%m%d')}"
 
-            if any(item.startswith(target_prefix) for item in os.listdir(parent_dir)):
-                completion_str = " (labeled)"
+            for item in os.listdir(parent_dir):
+                if item.startswith(target_prefix):
+                    target_folder = os.path.join(parent_dir, item)
+                    
+                    # 해당 폴더가 실제로 디렉토리인지 확인한다.
+                    if os.path.isdir(target_folder):
+                        file_count = len(os.listdir(target_folder))
+                        
+                        completion_str  = f' ({file_count})'
 
             message = f"{color}- {date_str}: {count}{completion_str}{Fore.RESET}"
             print(message)
@@ -80,19 +87,13 @@ def count_files_in_directory(path, output_file=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Specify computer type')
-    parser.add_argument('-c', '--com', choices=['lab', 'l', 'home', 'h', 'drive', 'd', 'backup', 'b'], default='backup', help='실행할 모드를 설정합니다.')
+    parser.add_argument('-c', '--com', choices=['drive', 'd'], default='drive', help='실행할 모드를 설정합니다.')
     parser.add_argument('-l', '--log', action='store_true', default = True, help='log 저장 여부를 설정합니다.')
     args = parser.parse_args()
 
     paths = {
-        'lab': "G:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output",
-        'l': "G:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output",
-        'home': "H:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output",
-        'h': "H:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/output",
-        'drive': "E:/images",
-        'd': "E:/images",
-        'backup': "D:/LOTTE/images",
-        'b': "D:/LOTTE/images"
+        'drive': "D:/Dataset/Site/",
+        'd': "D:/Dataset/Site/"
     }
     
     directory_path = paths.get(args.com, None)
@@ -101,8 +102,8 @@ if __name__ == "__main__":
         exit()
 
     if args.log == True:
-        with open('G:/내 드라이브/0. Run/1. Research/2. HangingObjectDetection/HOD/app/status.txt', 'w', encoding='utf-8') as f:
-            count_files_in_directory(directory_path, f)
+        with open('./status.txt', 'w', encoding='utf-8') as f:
+            count_files_in_directory(directory_path + 'images', f)
     else:
-        count_files_in_directory(directory_path)
+        count_files_in_directory(directory_path + 'images')
 

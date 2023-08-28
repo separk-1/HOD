@@ -3,6 +3,7 @@ import subprocess
 from datetime import datetime
 import os
 import sys
+import re
 
 app = Flask(__name__)
 
@@ -13,15 +14,14 @@ def get_day_of_week(date_string):
 
 def parse_txt():
     def convert_date_format(date_str):
-        date_str = date_str.split('-')[1].strip()  # "- " 부분을 제거
+        date_str = date_str.split('-')[1].strip()
         year = int(date_str.split('년')[0].strip())
         
-        # "1(목)"과 같은 형식에서 숫자만 추출
         month_day = date_str.split('년')[1].split('/')
         month = int(month_day[0].strip())
         day = int(month_day[1].split('(')[0].strip())
         
-        year += 2000  # "22년"을 "2022"로 변환
+        year += 2000
         return f"{year}-{month:02d}-{day:02d}"
 
     data = {}
@@ -37,23 +37,28 @@ def parse_txt():
         for line in lines:
             line = line.strip()
 
-            if line.endswith('%)'):  # 카테고리를 확인하는 조건
+            if line.endswith('%)'):
                 category = line.split('(')[0].strip()
                 data[category] = []
             elif line.startswith('-'):
                 date_str, value = line.split(':')
                 date = convert_date_format(date_str)
 
-                # Check for (labeled) and handle accordingly
-                labeled = '(labeled)' in value
-                if labeled:
-                    value = value.replace('(labeled)', '').strip()
-        
+                # Regular expression to find (number) pattern
+                pattern = re.compile(r'\((\d+)\)')
+                match = pattern.search(value)
+
+                # Check for (number) pattern and handle accordingly
+                if match:
+                    labeled_count = int(match.group(1))
+                    value = pattern.sub('', value).strip()
+                else:
+                    labeled_count = 0
+
                 if category:
-                    data[category].append((date, int(value.strip()), labeled))
+                    data[category].append((date, int(value.strip()), labeled_count))
                 else:
                     print("Error: No category detected")
-
 
     return timestamp, directory_path, data
 

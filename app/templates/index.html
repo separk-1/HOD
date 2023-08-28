@@ -9,14 +9,14 @@
 
     <style>
         body {
-            font-family: Arial, sans-serif; /* 기본 폰트 설정 */
-            background-color: #f8f8f8; /* 밝은 회색 배경 */
-            color: #333; /* 글자색 */
+            font-family: "Times New Roman", Times, serif; /* 기본 폰트 설정 */
+            background-color: #EAEAEA; /* 밝은 회색 배경 */
+            color: #353535; /* 글자색 */
             margin: 40px; /* 바디 주위의 마진 */
         }
 
         h1, h2 {
-            color: #4CAF50; /* 녹색 */
+            color: #353535; /* 녹색 */
         }
 
         /* 폼 및 버튼 스타일 */
@@ -24,7 +24,7 @@
             margin-bottom: 20px;
         }
 
-        button[type="submit"], .update-button {
+        button[type="submit"]{
             padding: 8px 15px;
             font-size: 14px;
             border-radius: 5px;
@@ -34,10 +34,32 @@
             cursor: pointer;
         }
 
-        button[type="submit"]:hover, .update-button:hover {
-            background-color: #333;
-            color: #f8f8f8;
+        button[type="submit"]:hover{
+            background-color: #353535;
+            color: #EAEAEA;
         }
+
+        .update-button {
+        background-color: #D2D2D2;
+        border: None; /* 초기 상태에서의 테두리 색 변경 */
+        color: #353535;
+        padding: 12px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        border-radius: 12px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        }
+
+        .update-button:hover {
+            background-color: #353535;
+            border: None; /* 호버 상태에서의 테두리 색 */
+            color: #EAEAEA;
+        }
+
         .calendar {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
@@ -53,7 +75,7 @@
         border-radius: 10px;
         }
         .calendar-day .date {
-            font-size: 0.8rem;
+            font-size: 1rem;
             font-weight: bold;
         }
         .calendar-day .value {
@@ -61,48 +83,33 @@
             font-weight: normal;
         }
         .data-green {
-            background-color: #BCE9B7; /* 연한 녹색 */
+            background-color: #E4E4E4; /* 연한 녹색 */
         }
         .data-blue {
-            background-color: #D9E5FF; /* 연한 파란색 */
+            background-color: #D2D2D2; /* 연한 파란색 */
         }
         .data-red {
-            background-color: #FFCBCB; /* 연한 빨간색 */
+            background-color: #C0C0C0; /* 연한 빨간색 */
         }
 
         .data-labeled {
-        background-color: #4CAF50; 
-        color: white; 
+        background-color: #A3AFC9; 
+        color: #EAEAEA; 
         }
 
-        .update-button {
-        background-color: #4CAF50; /* 녹색 배경 */
-        border: none;
-        color: white; /* 텍스트는 하얀색 */
-        padding: 12px 20px; /* 상하, 좌우 패딩 */
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        border-radius: 12px; /* 모서리 둥글게 */
-        transition-duration: 0.4s; /* 호버 효과 시간 */
-        cursor: pointer; /* 마우스 포인터 모양 변경 */
-        border: 2px solid #4CAF50; /* 테두리 */
-    }
-
-    .update-button:hover {
-        background-color: white; /* 호버 상태에서의 배경색 */
-        color: #4CAF50; /* 호버 상태에서의 글자색 */
+    .times-new-roman {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 32px
     }
 
     </style>
     
 </head>
 <body>
-    <h1> 😶😶😶 </h1>
-    <p><strong>Timestamp:</strong> {{ timestamp }}</p>
+    <h1> 🏗️ </h1>
+    <p class="times-new-roman">Monocular Camera-Based Detection of Suspended Loads in Construction Sites</p>
     <p><strong>Directory Path:</strong> {{ directory_path }}</p>
+    <p><strong>Timestamp:</strong> {{ timestamp }}</p>
 
     <form action="/update" method="post">
         <button class="update-button" type="submit"><strong>Update ✅</strong></button>
@@ -123,7 +130,7 @@
             {% for date, value, labeled in items %}
                 {% set color_class = '' %}
                 {% if value %}
-                    {% if labeled == True %}
+                    {% if labeled != 0 %}
                         {% set color_class = 'data-labeled' %}
                     {% elif value >= 800 %}
                         {% set color_class = 'data-green' %}
@@ -133,12 +140,12 @@
                         {% set color_class = 'data-red' %}
                     {% endif %}
                 {% endif %}
-                <div class="calendar-day {{ color_class }}">
+                <div class="calendar-day {{ color_class }}" {% if labeled != 0 %} title="Labeled: {{ labeled }}" {% endif %}>
                     <span class="date">{{ date.split('-')[1]|int }}/{{ date.split('-')[2]|int }} {{ get_day_of_week(date) }}</span>
                     {% if value %}
                         <span class="value">{{ value }}</span>
                     {% endif %}
-                </div>
+                </div>                
             {% endfor %}
         </div>
     {% endfor %}
