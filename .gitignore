@@ -1,5 +1,6 @@
 old/
 readme.txt
-hanging/
-output/
-sample/
+datasets/
+downsize_img_D3.py
+downsize_img_D4.py
+downsize_img_D8.py

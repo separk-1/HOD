@@ -1,15 +1,17 @@
 import shutil
 import os
 
+# labeled 파일을 바탕으로 해당하는 이미지 추출하기
+
 # 원본 txt 파일을 읽기 모드로 열기
-with open('file_list_modified.txt', 'r') as f:
+with open('../../config/filelist_labeled.txt', 'r') as f:
     files = f.read().splitlines()
 
 # 복사할 원본 파일의 기본 경로
-source_folder = "D:/Dataset/Site/images/"
+source_folder = "D:/Dataset/Site_downsized/images/"
 
 # 복사될 대상의 기본 경로
-destination_folder = "I:/Dataset_sample/images/"
+destination_folder = "D:/Dataset/Sample/images/"
 
 # 파일 목록을 돌면서 파일 복사하기
 not_found_files = []  # not found된 파일을 저장할 리스트
@@ -24,8 +26,9 @@ for file_path in files:
         try:
             # 실제 파일 복사 수행
             shutil.copy(source, destination)
+            print("복사 완료")
         except FileNotFoundError:
-            print(f"File {file_name} not found. Skipping.")
+            #print(f"File {file_name} not found. Skipping.")
             not_found_files.append(file_name)
 
 # not found된 파일 목록을 정렬

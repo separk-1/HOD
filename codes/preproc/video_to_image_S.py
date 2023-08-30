@@ -82,7 +82,7 @@ finished_video_list = []
 count_finish = 0
 count_skip = 0
 
-file_path = f'./video_list/videolist_S_filtered.txt'
+file_path = f'./config/videolist_S_filtered.txt'
 
 video_list = read_list_from_file(file_path)
 
