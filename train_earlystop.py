@@ -5,12 +5,46 @@ from torchvision.datasets import CocoDetection
 from torchvision import transforms
 from tqdm import tqdm
 
+## 코드 수정 필요
 # 사용자 정의 데이터 묶음 함수(collate function)
 def collate_fn(batch):
     return tuple(zip(*batch))
 
+def validate(model, val_data_loader, device):
+    model.eval()
+    total_loss = 0.0
+
+    with torch.no_grad():
+        for images, targets in val_data_loader:
+            images = list(image.to(device) for image in images)
+            
+            processed_targets = []
+            for t in targets:
+                if isinstance(t, dict):
+                    processed_targets.append({k: v.to(device) for k, v in t.items()})
+                else:
+                    processed_targets.append({
+                        'boxes': torch.zeros((0, 4), dtype=torch.float32, device=device),
+                        'labels': torch.zeros(0, dtype=torch.int64, device=device),
+                    })
+
+            # Set model to training mode temporarily to get loss_dict
+            model.train()
+            loss_dict = model(images, processed_targets)
+
+            model.eval()  # Set it back to evaluation mode
+
+            losses = sum(loss for loss in loss_dict.values())
+            total_loss += losses.item()
+
+    average_loss = total_loss / len(val_data_loader)
+    return average_loss
+
+
+
+
 def main():
-    num_epochs = 50  # 전체 데이터셋을 학습할 횟수
+    num_epochs = 100  # 전체 데이터셋을 학습할 횟수
     batch_size = 4 # 한 번에 n개의 샘플을 가져옴
 
     # Check if CUDA is available and print
@@ -57,7 +91,22 @@ def main():
     # 모델을 학습 모드로 설정
     model.train()
 
-    # 여러 에폭에 걸쳐 학습
+    val_dataset = CocoDetection(root='./datasets/D1/images/',
+                                annFile='./datasets/D1/D1_COCO.json',
+                                transform=transforms.ToTensor())
+
+    val_data_loader = torch.utils.data.DataLoader(
+        val_dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=4,
+        collate_fn=collate_fn
+    )
+
+    best_loss = float('inf')
+    patience = 5  # 연속적으로 향상되지 않은 에폭 수
+    early_stop_counter = 0
+
     print("Training started...")
     for epoch in range(num_epochs):
         print(f"Starting epoch {epoch + 1}")
@@ -85,9 +134,24 @@ def main():
 
             pbar.set_postfix({"Batch Loss": losses.item()})
     
+        # Validate the model
+        val_loss = validate(model, val_data_loader, device)
+        print(f"Validation loss: {val_loss}")
+
+        # Check for early stopping
+        if val_loss < best_loss:
+            best_loss = val_loss
+            early_stop_counter = 0
+            torch.save(model.state_dict(), f'fasterrcnn_resnet50_fpn_best.pth')
+        else:
+            early_stop_counter += 1
+            if early_stop_counter >= patience:
+                print(f"Validation loss hasn't improved for {patience} epochs. Early stopping...")
+                break
+
     print("Training completed.")
 
-    torch.save(model.state_dict(), f'./results/fasterrcnn_resnet50_fpn_D1_{epoch}.pth')
+    torch.save(model.state_dict(), f'fasterrcnn_resnet50_fpn_{num_epochs}.pth')
 
 if __name__ == '__main__':
     main()

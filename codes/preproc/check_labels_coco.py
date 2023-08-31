@@ -6,16 +6,16 @@ from matplotlib.patches import Rectangle
 from PIL import Image
 
 # Path to COCO annotation file
-coco_annotation_file = "../../datasets/sample/coco_annotations.json"
+coco_annotation_file = "../../datasets/D1/D1_COCO.json"
 
 # Load COCO annotations
 with open(coco_annotation_file, "r") as f:
     coco_annotations = json.load(f)
 
 # Load an image for visualization
-image_id = 129  # Change this to the desired image ID
+image_id = 294  # Change this to the desired image ID
 image_filename = coco_annotations["images"][image_id]["file_name"]
-image_path = os.path.join("./datasets/sample/images", image_filename)
+image_path = os.path.join("../../datasets/D1/images", image_filename)
 image = Image.open(image_path)
 
 # Get annotations for the selected image

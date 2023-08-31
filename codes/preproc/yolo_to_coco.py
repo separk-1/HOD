@@ -11,9 +11,9 @@ annotations: id, image_id, bbox, area, iscrowd, category_id, (segmentation제외
 '''
 
 # Define paths
-yolo_labels_dir = "../../datasets/sample/labels_yolo"
-image_dir = "../../datasets/sample/images"
-coco_annotation_file = "./datasets/sample/coco_annotations.json"
+yolo_labels_dir = "../../datasets/D1/labels"
+image_dir = "../../datasets/D1/images"
+coco_annotation_file = "../../datasets/D1/D1_COCO.json"
 
 # COCO categories
 coco_categories = [{"supercategory": "object", "id": 0, "name": "hanging_object"}]
@@ -39,7 +39,7 @@ annotation_id_counter = 0
 
 for filename in tqdm(os.listdir(yolo_labels_dir)):
     if filename.lower().endswith('.txt'):
-        image_filename = os.path.splitext(filename)[0] + '.png'
+        image_filename = os.path.splitext(filename)[0] + '.jpg'
         image_path = os.path.join(image_dir, image_filename)
         image = Image.open(image_path)
         img_width, img_height = image.size
