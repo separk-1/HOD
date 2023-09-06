@@ -3,20 +3,16 @@ import shutil
 import random
 
 # 원본 데이터셋 폴더 경로
-images_folder = './datasets/sample/images'
-labels_folder = './datasets/sample/labels'
+images_folder = '../../datasets/sample/train/images'
+labels_folder = '../../datasets/sample/train/labels'
 
 # 새로 생성할 폴더 경로
-images_train_folder = './datasets/sample/images_train'
-images_val_folder = './datasets/sample/images_val'
-labels_train_folder = './datasets/sample/labels_train'
-labels_val_folder = './datasets/sample/labels_val'
+images_test_folder = '../../datasets/sample/test/images'
+labels_test_folder = '../../datasets/sample/test/labels'
 
 # 새 폴더 생성 (이미 존재한다면 덮어쓰기)
-os.makedirs(images_train_folder, exist_ok=True)
-os.makedirs(images_val_folder, exist_ok=True)
-os.makedirs(labels_train_folder, exist_ok=True)
-os.makedirs(labels_val_folder, exist_ok=True)
+os.makedirs(images_test_folder, exist_ok=True)
+os.makedirs(labels_test_folder, exist_ok=True)
 
 # 파일 리스트 불러오기 (.png와 .txt 파일만)
 image_files = [f for f in os.listdir(images_folder) if f.endswith('.png')]
@@ -36,15 +32,11 @@ random.shuffle(matching_files_base)
 
 # 9:1 비율로 나누기
 num_files = len(matching_files_base)
-num_train = int(0.9 * num_files)
+num_train = int(0.7 * num_files)
 train_files_base = matching_files_base[:num_train]
 val_files_base = matching_files_base[num_train:]
 
 # 파일을 새로운 폴더로 복사
 for f_base in train_files_base:
-    shutil.copy(os.path.join(images_folder, f_base + '.png'), os.path.join(images_train_folder, f_base + '.png'))
-    shutil.copy(os.path.join(labels_folder, f_base + '.txt'), os.path.join(labels_train_folder, f_base + '.txt'))
-
-for f_base in val_files_base:
-    shutil.copy(os.path.join(images_folder, f_base + '.png'), os.path.join(images_val_folder, f_base + '.png'))
-    shutil.copy(os.path.join(labels_folder, f_base + '.txt'), os.path.join(labels_val_folder, f_base + '.txt'))
+    shutil.move(os.path.join(images_folder, f_base + '.png'), os.path.join(images_test_folder, f_base + '.png'))
+    shutil.move(os.path.join(labels_folder, f_base + '.txt'), os.path.join(labels_test_folder, f_base + '.txt'))
