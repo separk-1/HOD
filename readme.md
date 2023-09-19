@@ -37,3 +37,63 @@ python video_to_image.py -c [lab/home]
 ```bash
 python status.py -c [lab/home/drive/backup] --log
 ```
+
+---
+
+### get_dataset.py
+
+주어진 경로에서 데이터셋을 가져오는 스크립트
+
+#### 기능
+1. 이미지 및 레이블 데이터를 가져오기 위해 주어진 경로에서 파일 목록을 생성
+2. 데이터셋 파일 목록을 생성하고 반환
+
+#### 주요 변수 설정
+- `dataset_path`: 데이터셋 파일을 가져올 경로
+
+#### Sample Usage
+```bash
+python get_dataset.py
+```
+
+---
+
+### split_dataset.py
+
+데이터셋을 훈련 및 검증 세트로 분할하는 스크립트
+
+#### 기능
+1. 데이터셋을 훈련 및 검증 세트로 나누기 위해 데이터셋 파일 목록을 읽음
+2. 주어진 비율에 따라 데이터셋을 나누고 훈련 및 검증 세트 파일 목록을 생성
+
+#### 주요 변수 설정
+- `dataset_path`: 데이터셋 파일을 가져올 경로
+- `train_ratio`: 훈련 세트 비율 (0.0에서 1.0 사이의 값)
+- `val_ratio`: 검증 세트 비율 (0.0에서 1.0 사이의 값)
+- `output_path`: 분할된 데이터셋 파일 목록을 저장할 경로
+
+#### Sample Usage
+```bash
+python split_dataset.py
+```
+
+---
+
+### run_yolo.py
+
+YOLO 모델을 실행하여 객체 검출 수행
+
+#### 기능
+1. YOLO 모델을 사용하여 주어진 이미지에서 객체 검출을 수행
+2. 검출된 객체의 클래스 및 위치 정보를 반환
+
+#### 주요 변수 설정
+- `image_path`: 객체 검출을 수행할 이미지 파일의 경로
+- `config_path`: YOLO 모델 구성 파일의 경로
+- `weights_path`: 사전 훈련된 YOLO 모델 가중치 파일의 경로
+- `class_path`: 객체 클래스 목록이 있는 파일의 경로
+
+#### Sample Usage
+```bash
+python run_yolo.py -i [image_path] -c [config_path] -w [weights_path] -cl [class_path]
+```
