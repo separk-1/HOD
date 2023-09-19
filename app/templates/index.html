@@ -143,7 +143,7 @@
                 <div class="calendar-day {{ color_class }}" {% if labeled != 0 %} title="Labeled: {{ labeled }}" {% endif %}>
                     <span class="date">{{ date.split('-')[1]|int }}/{{ date.split('-')[2]|int }} {{ get_day_of_week(date) }}</span>
                     {% if value %}
-                        <span class="value">{{ value }}</span>
+                        <span class="value">{{ labeled }} / {{ value }}</span>
                     {% endif %}
                 </div>                
             {% endfor %}

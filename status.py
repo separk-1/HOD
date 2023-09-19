@@ -92,8 +92,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     paths = {
-        'drive': "D:/Dataset/Site/",
-        'd': "D:/Dataset/Site/"
+        'drive': "D:/Dataset/Site_HD/",
+        'd': "D:/Dataset/Site_HD/"
     }
     
     directory_path = paths.get(args.com, None)

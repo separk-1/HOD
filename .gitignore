@@ -10,3 +10,4 @@ train_earlystop_faster.py
 train_faster.py
 test_faster.py
 codes/models/yolov5
+codes/models/detr
