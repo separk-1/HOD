@@ -8,8 +8,8 @@ import shutil
 ##########SETTING###########
 cam_list = [1, 2, 3]
 interval = 30 #단위: sec
-finish_list_path = './video_list/finishlist.txt'
-skip_list_path = './video_list/skiplist.txt'
+finish_list_path = '../config/finishlist.txt'
+skip_list_path = '../config/skiplist.txt'
 save_path = "C:/Users/SEPARK/Downloads" 
 ############################
 

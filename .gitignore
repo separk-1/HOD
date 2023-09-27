@@ -11,3 +11,4 @@ train_faster.py
 test_faster.py
 codes/models/yolov5
 codes/models/detr
+codes/models/CenterNet

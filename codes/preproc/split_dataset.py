@@ -1,17 +1,9 @@
 import os
 import random
 import shutil
-
+'''
 def list_files_in_directory(directory):
-    """
-    List all files in the specified directory.
-
-    Args:
-        directory (str): Path to the directory.
-
-    Returns:
-        file_list (list): List of file names in the directory.
-    """
+    # List all files in the specified directory
     file_list = []
     for root, _, files in os.walk(directory):
         for file in files:
@@ -60,52 +52,26 @@ def split_images(images_folder, train_folder, val_folder, split_ratio=0.9):
         dst_path = os.path.join(val_folder, image)
         shutil.move(src_path, dst_path)
         print(f"Moved {image} to {val_folder}")
-
-def split_labels(labels_folder, train_folder, val_folder, split_ratio=0.9):
-    # Create train and val folders if they do not exist
-    if not os.path.exists(train_folder):
-        os.makedirs(train_folder)
-    if not os.path.exists(val_folder):
-        os.makedirs(val_folder)
-
-    # List all files in the labels folder
-    label_files = os.listdir(labels_folder)
-
-    # Calculate the number of labels for the train set
-    num_train = int(len(label_files) * split_ratio)
-    
-    # Randomly shuffle the label files
-    random.shuffle(label_files)
-
-    # Split the label files into train and val sets
-    train_labels = label_files[:num_train]
-    val_labels = label_files[num_train:]
-
-    # Move the train labels to the train folder
-    for label in train_labels:
-        src_path = os.path.join(labels_folder, label)
-        dst_path = os.path.join(train_folder, label)
-        shutil.move(src_path, dst_path)
-        print(f"Moved {label} to {train_folder}")
-
-    # Move the val labels to the val folder
-    for label in val_labels:
-        src_path = os.path.join(labels_folder, label)
-        dst_path = os.path.join(val_folder, label)
-        shutil.move(src_path, dst_path)
-        print(f"Moved {label} to {val_folder}")
-
+'''
 # 경로 설정
 images_folder = 'D:/Dataset/Sample/0919/images'
 train_images_folder = 'D:/Dataset/Sample/0919/train/images'
 val_images_folder = 'D:/Dataset/Sample/0919/val/images'
 
+# 이미지 분할 (9:1 비율)
+#split_images(images_folder, train_images_folder, val_images_folder, split_ratio=0.9)
+
 labels_folder = 'D:/Dataset/Sample/0919/labels'
 train_labels_folder = 'D:/Dataset/Sample/0919/train/labels'
 val_labels_folder = 'D:/Dataset/Sample/0919/val/labels'
 
-# 이미지 분할 (9:1 비율)
-split_images(images_folder, train_images_folder, val_images_folder, split_ratio=0.9)
-
-# 레이블 분할 (9:1 비율)
-split_labels(labels_folder, train_labels_folder, val_labels_folder, split_ratio=0.9)
+# train/images에 있는 이미지 파일 이름과 같은 labels 폴더 안의 txt 파일을 train/labels로 이동
+for image_filename in os.listdir(train_images_folder):
+    if image_filename.endswith('.png'):
+        label_filename = image_filename.replace('.png', '.txt')
+        src_label_path = os.path.join(labels_folder, label_filename)
+        dst_label_path = os.path.join(train_labels_folder, label_filename)
+        if os.path.exists(src_label_path):
+            print(src_label_path, dst_label_path)
+            shutil.move(src_label_path, dst_label_path)
+            print(f"Moved {label_filename} to {train_labels_folder}")
