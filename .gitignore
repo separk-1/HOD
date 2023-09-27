@@ -5,10 +5,7 @@ downsize_img_D3.py
 downsize_img_D4.py
 downsize_img_D8.py
 results/
-playground.py
-train_earlystop_faster.py
-train_faster.py
-test_faster.py
 codes/models/yolov5
 codes/models/detr
 codes/models/CenterNet
+playground.py
