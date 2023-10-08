@@ -4,14 +4,15 @@ import datetime
 import argparse
 import time
 import shutil
+from PIL import Image
 
 ##########SETTING###########
-cam_list = [1, 2, 3]
+cam_list = [3]
 interval = 30 #단위: sec
 save_path = "C:/Users/SEPARK/Downloads" 
 videolist_path = '../../config/videolist_2'
 disk_path = 'E:/서초테라스힐/'
-save_image_path = 'F:/Dataset/Site_FHD/images'
+save_image_path = 'F:/Dataset/Site_HD/images'
 finish_list_path = f'{videolist_path}/finishlist.txt'
 ############################
 
@@ -60,6 +61,24 @@ def generate_filename(cam_id, video_id, timestamp):
 # 비디오 파일을 로컬로 복사합니다.
 def copy_video_to_local(src, dst):
     shutil.copy(src, dst)
+    
+def resize_and_save_image(image, output_path, target_size=(1280, 720)):
+    """
+    Resize and save the image to the specified path.
+
+    Args:
+        image (numpy.ndarray): The image to be resized and saved.
+        output_path (str): The path to save the resized image.
+        target_size (tuple): Target size for resizing (width, height).
+    """
+    # Convert the OpenCV image format to PIL image format
+    image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    
+    # Resize the image
+    resized_img = image.resize(target_size, Image.LANCZOS)
+    
+    # Save the resized image
+    resized_img.save(output_path, format='png')
 
 finish_list = read_list_from_file(finish_list_path)
 
@@ -124,12 +143,9 @@ for cam_id in cam_list:
             if frame_count % frame_interval == 0:
                 output_path = os.path.join(date_folder, generate_filename(cam_id, video_id, timestamp))
                 if not os.path.exists(output_path):  # 이미지가 존재하지 않을 경우만 저장
-                    # 화면에 표시
-                    success = cv2.imwrite(output_path, frame)
-                    if success:
-                        print(f'{output_path} 저장 완료')
-                    else:
-                        print(f'{output_path} 저장 실패')
+                    # 리사이즈하며 저장
+                    resize_and_save_image(frame, output_path)
+                    print(f'{output_path} 저장 완료')
                 else:
                     print(f'{output_path} 이미 존재하여 저장하지 않았습니다.')
                 timestamp += 1

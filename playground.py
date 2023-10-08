@@ -1,50 +1,48 @@
-from pascal import annotation_from_yolo
-from pascal.utils import save_xml
 import os
+import glob
 
-def list_text_files(folder_path):
-    """
-    List all text files in the given folder.
-    Args:
-    - folder_path (str): Path to the folder to search
-    Returns:
-    - List of text file names (List[str])
-    """
-    text_files = []
-    with os.scandir(folder_path) as entries:
-        for entry in entries:
-            if entry.is_file() and entry.name.endswith('.txt'):
-                text_files.append(entry.name)
-    return text_files
+# 이미지 파일 확장자 리스트
+image_extensions = ["png"]
 
-def main():
-    # Define the label map
-    label_map = {
-        0: "hanging_object",
-        1: "hanging_rope"
-    }
+# 경로 설정 (원하는 경로로 변경하세요)
+path_to_search = "F:Dataset/Site_HD/images/D4"
 
-    # Define the modes to process
-    modes = ['train']
+# 이미지 파일 개수를 저장할 변수 초기화
+total_image_count = 0
 
-    # Loop through each mode and process files
-    for mode in modes:
-        label_path = f'../Colab/Dataset/0919/{mode}/labels'
-        text_files = list_text_files(label_path)
+# 디렉토리와 하위 디렉토리에서 이미지 파일 찾기
+for root, dirs, files in os.walk(path_to_search):
+    # "S_230303" 이후의 폴더는 무시
+    if "230320" in root:
+        break
+    for file in files:
+        if file.lower().split(".")[-1] in image_extensions:
+            total_image_count += 1
 
-        for file in text_files:
-            filename = file.split('.')[0]
-            
-            # Convert YOLO annotations to PASCAL VOC format
-            ann = annotation_from_yolo(
-                f"{label_path}/{filename}.txt",
-                label_map=label_map,
-                img_w=1280,
-                img_h=720)
-            
-            # Convert annotation to XML and save
-            xml = ann.to_xml()
-            save_xml(f"../Colab/Dataset/0919/{mode}/labels_xml/{filename}.xml", xml)
+# 이미지 파일 개수 출력
+print(f"경로 '{path_to_search}' 내의 이미지 파일 개수: {total_image_count}개")
 
-if __name__ == "__main__":
-    main()
+
+label_extensions = ["txt"]
+
+# 경로 설정 (원하는 경로로 변경하세요)
+path_to_search = "F:Dataset/Site_HD/labels/S"
+
+# 이미지 파일 개수를 저장할 변수 초기화
+total_label_count = 0
+
+# 디렉토리와 하위 디렉토리에서 이미지 파일 찾기
+for root, dirs, files in os.walk(path_to_search):
+    for file in files:
+        if file.lower().split(".")[-1] in label_extensions:
+            total_label_count += 1
+
+# 이미지 파일 개수 출력
+print(f"경로 '{path_to_search}' 내의 텍스트 파일 개수: {total_label_count}개")
+
+total_point = (total_image_count-total_label_count) + 40*total_label_count
+
+print(f"최종 금액: {total_point}원")
+
+
+

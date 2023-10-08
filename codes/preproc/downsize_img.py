@@ -28,20 +28,20 @@ def copy_and_resize_images(source_dir, destination_dir, target_size=(1280, 720),
                 try:
                     # Resize the image while copying
                     with Image.open(source_path) as img:
-                        resized_img = img.resize(target_size, Image.ANTIALIAS)
+                        resized_img = img.resize(target_size, Image.LANCZOS)
                         resized_img.save(destination_path, format='png')  # You can adjust the format if needed
 
                     print(f"Copied and resized: {source_path} to {destination_path}")
-                except OSError as e:
-                    print(f"Error occurred while processing image: {e}")
+                except (OSError, AttributeError) as e:
+                    print(f"Error occurred while processing image: {e}: {destination_path}")
                     error_count+=1
                     continue  # Skip to the next image in case of an error
     return error_count
 
 
 # Example usage
-source_directory = "D:/Dataset/Site/images/D1"
-destination_directory = "E:/images"
+source_directory = "F:/Dataset/Site_FHD/images/D1"
+destination_directory = "F:/Dataset/Site_HD/images/D1"
 
 error_count = copy_and_resize_images(source_directory, destination_directory)
 print(f'error image count: {error_count}')

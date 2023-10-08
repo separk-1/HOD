@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./favicon.ico" type="image/x-icon" sizes="16x16">
-    <title>Log ▪▪▪ </title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>HOD Dataset</title>
 
     <style>
         body {
-            font-family: "Times New Roman", Times, serif; /* 기본 폰트 설정 */
+            font-family: 'Montserrat', sans-serif; /* 기본 폰트 설정 */
             background-color: #EAEAEA; /* 밝은 회색 배경 */
             color: #353535; /* 글자색 */
             margin: 40px; /* 바디 주위의 마진 */
@@ -76,11 +77,11 @@
         }
         .calendar-day .date {
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 500;
         }
         .calendar-day .value {
             font-size: 0.8rem;
-            font-weight: normal;
+            font-weight: 300;
         }
         .data-green {
             background-color: #E4E4E4; /* 연한 녹색 */
@@ -93,12 +94,12 @@
         }
 
         .data-labeled {
-        background-color: #A3AFC9; 
+        background-color: #3162ca; 
         color: #EAEAEA; 
         }
 
-    .times-new-roman {
-    font-family: "Times New Roman", Times, serif;
+    .Montserrat {
+    font-family: 'Montserrat', sans-serif;
     font-size: 32px
     }
 
@@ -106,18 +107,17 @@
     
 </head>
 <body>
-    <h1> 🏗️ </h1>
-    <p class="times-new-roman">Monocular Camera-Based Detection of Suspended Loads in Construction Sites</p>
-    <p><strong>Directory Path:</strong> {{ directory_path }}</p>
-    <p><strong>Timestamp:</strong> {{ timestamp }}</p>
+    <p class="Montserrat">Monocular Camera-Based Detection of Suspended Loads in Construction Sites</p>
+    <p><strong>Directory Path  </strong> {{ directory_path }}</p>
+    <p><strong>Timestamp  </strong> {{ timestamp }}</p>
 
     <form action="/update" method="post">
-        <button class="update-button" type="submit"><strong>Update ✅</strong></button>
+        <button class="update-button" type="submit"><strong>Update</strong></button>
     </form>
 
 
     <form action="/" method="post">
-        <label><strong></strong>Select Month:</strong></label>
+        <label><strong>Select Month  </strong></label>
         <button type="submit" name="selected_month" value="all">All</button>
         {% for i in [12,1,2,3,4,5,6,7] %}
             <button type="submit" name="selected_month" value="{{ i }}">{{ i }}</button>
