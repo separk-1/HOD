@@ -11,8 +11,8 @@ annotations: id, image_id, bbox, area, iscrowd, category_id, (segmentation제외
 '''
 
 # Define paths
-data_dir = 'D:/Dataset/Sample/0919'
-coco_annotation_dir = 'D:/Dataset/Sample/0919/coco_annotations'
+data_dir = 'G:/내 드라이브/datasets/1008/'
+coco_annotation_dir = 'G:/내 드라이브/datasets/1008/'
 
 # Create COCO annotation directory if it doesn't exist
 if not os.path.exists(coco_annotation_dir):
@@ -34,7 +34,7 @@ def yolo_to_coco_bbox(yolo_bbox, img_width, img_height):
     return [x_min, y_min, x_max - x_min, y_max - y_min]
 
 # Process train, test, and val sets
-for split in ["val"]:
+for split in ["train", "test"]:
     yolo_labels_dir = os.path.join(data_dir, split, 'labels')
     image_dir = os.path.join(data_dir, split, 'images')
     coco_annotation_file = os.path.join(coco_annotation_dir, f'coco_{split}.json')
